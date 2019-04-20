@@ -12,6 +12,8 @@ from rabbit_python import config
 class FibonacciRpcClient(object):
 
     def __init__(self):
+        self.response = 0
+        self.corr_id = 0
         self.connection = pika.BlockingConnection(
             pika.ConnectionParameters(host=config.host, port=config.port))
 
@@ -33,7 +35,7 @@ class FibonacciRpcClient(object):
             self.response = body
 
     def call(self, n):
-        self.response = None
+        self.response = 0
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(
             exchange='',
@@ -43,7 +45,7 @@ class FibonacciRpcClient(object):
                 correlation_id=self.corr_id,
             ),
             body=str(n))
-        while self.response is None:
+        while self.response == 0:
             self.connection.process_data_events()
         return int(self.response)
 

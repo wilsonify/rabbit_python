@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import logging
 from logging.config import dictConfig
 
 import pika

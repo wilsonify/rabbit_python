@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
+import logging
 from logging.config import dictConfig
-
 import pika
 from rabbit_python import config
 

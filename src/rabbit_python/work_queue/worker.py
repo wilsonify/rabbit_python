@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os
+import logging
 from logging.config import dictConfig
-
 import pika
 import time
 from rabbit_python import config
@@ -27,6 +27,11 @@ channel.basic_qos(prefetch_count=1)
 channel.basic_consume(queue='task_queue', on_message_callback=callback)
 
 channel.start_consuming()
+
+
+def main():
+    pass
+
 
 if __name__ == '__main__':
     os.makedirs(config.logging_dir, exist_ok=True)
