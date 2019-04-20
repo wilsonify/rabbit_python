@@ -16,7 +16,11 @@ def main():
     channel.queue_declare(queue='hello')
 
     def callback(ch, method, properties, body):
-        logging.debug("callback")
+        logging.info("callback")
+        logging.debug("ch = {}".format(ch))
+        logging.debug("method = {}".format(method))
+        logging.debug("properties = {}".format(properties))
+
         print(" [x] Received %r" % body)
 
     channel.basic_consume(

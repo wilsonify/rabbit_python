@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import os
+from logging.config import dictConfig
+
 import pika
 from rabbit_python import config
 
@@ -17,6 +20,10 @@ print(' [*] Waiting for logs. To exit press CTRL+C')
 
 
 def callback(ch, method, properties, body):
+    logging.info("callback")
+    logging.debug("ch = {}".format(ch))
+    logging.debug("method = {}".format(method))
+    logging.debug("properties = {}".format(properties))
     print(" [x] %r" % body)
 
 
@@ -24,3 +31,14 @@ channel.basic_consume(
     queue=queue_name, on_message_callback=callback, auto_ack=True)
 
 channel.start_consuming()
+
+
+def main():
+    logging.info("main")
+    pass
+
+
+if __name__ == '__main__':
+    os.makedirs(config.logging_dir, exist_ok=True)
+    dictConfig(config.logging_config_dict)
+    main()

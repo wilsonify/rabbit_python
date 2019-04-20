@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+import os
+import logging
+from logging.config import dictConfig
+
 import pika
 from rabbit_python import config
 
@@ -38,3 +42,14 @@ channel.basic_consume(queue='rpc_queue', on_message_callback=on_request)
 
 print(" [x] Awaiting RPC requests")
 channel.start_consuming()
+
+
+def main():
+    logging.info("main")
+    pass
+
+
+if __name__ == '__main__':
+    os.makedirs(config.logging_dir, exist_ok=True)
+    dictConfig(config.logging_config_dict)
+    main()

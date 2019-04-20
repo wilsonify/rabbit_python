@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+import os
+from logging.config import dictConfig
+
 import pika
 import sys
 
@@ -16,3 +19,14 @@ channel.basic_publish(
     exchange='direct_logs', routing_key=severity, body=message)
 print(" [x] Sent %r:%r" % (severity, message))
 connection.close()
+
+
+def main():
+    logging.info("main")
+    pass
+
+
+if __name__ == '__main__':
+    os.makedirs(config.logging_dir, exist_ok=True)
+    dictConfig(config.logging_config_dict)
+    main()

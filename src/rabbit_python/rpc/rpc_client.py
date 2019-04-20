@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+import os
+import logging
+from logging.config import dictConfig
+
 import pika
 import uuid
 
@@ -22,6 +26,9 @@ class FibonacciRpcClient(object):
             auto_ack=True)
 
     def on_response(self, ch, method, props, body):
+        logging.info("on_response")
+        logging.debug("ch = {}".format(ch))
+        logging.debug("method= {}".format(method))
         if self.corr_id == props.correlation_id:
             self.response = body
 
@@ -46,3 +53,14 @@ fibonacci_rpc = FibonacciRpcClient()
 print(" [x] Requesting fib(30)")
 response = fibonacci_rpc.call(30)
 print(" [.] Got %r" % response)
+
+
+def main():
+    logging.info("main")
+    pass
+
+
+if __name__ == '__main__':
+    os.makedirs(config.logging_dir, exist_ok=True)
+    dictConfig(config.logging_config_dict)
+    main()
