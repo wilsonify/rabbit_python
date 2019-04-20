@@ -10,22 +10,23 @@ from rabbit_python import config
 
 
 class FibonacciRpcClient(object):
-
     def __init__(self):
         self.response = 0
         self.corr_id = 0
         self.connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host=config.host, port=config.port))
+            pika.ConnectionParameters(host=config.host, port=config.port)
+        )
 
         self.channel = self.connection.channel()
 
-        result = self.channel.queue_declare('', exclusive=True)
+        result = self.channel.queue_declare("", exclusive=True)
         self.callback_queue = result.method.queue
 
         self.channel.basic_consume(
             queue=self.callback_queue,
             on_message_callback=self.on_response,
-            auto_ack=True)
+            auto_ack=True,
+        )
 
     def on_response(self, ch, method, props, body):
         logging.info("on_response")
@@ -38,13 +39,13 @@ class FibonacciRpcClient(object):
         self.response = 0
         self.corr_id = str(uuid.uuid4())
         self.channel.basic_publish(
-            exchange='',
-            routing_key='rpc_queue',
+            exchange="",
+            routing_key="rpc_queue",
             properties=pika.BasicProperties(
-                reply_to=self.callback_queue,
-                correlation_id=self.corr_id,
+                reply_to=self.callback_queue, correlation_id=self.corr_id
             ),
-            body=str(n))
+            body=str(n),
+        )
         while self.response == 0:
             self.connection.process_data_events()
         return int(self.response)
@@ -59,7 +60,7 @@ def main():
     print(" [.] Got %r" % response)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     os.makedirs(config.logging_dir, exist_ok=True)
     dictConfig(config.logging_config_dict)
     main()

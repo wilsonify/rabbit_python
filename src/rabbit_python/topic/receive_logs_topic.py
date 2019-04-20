@@ -20,12 +20,13 @@ def callback(ch, method, properties, body):
 def main():
     logging.info("main")
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=config.host, port=config.port))
+        pika.ConnectionParameters(host=config.host, port=config.port)
+    )
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='topic_logs', exchange_type='topic')
+    channel.exchange_declare(exchange="topic_logs", exchange_type="topic")
 
-    result = channel.queue_declare('', exclusive=True)
+    result = channel.queue_declare("", exclusive=True)
     queue_name = result.method.queue
 
     binding_keys = sys.argv[1:]
@@ -35,16 +36,16 @@ def main():
 
     for binding_key in binding_keys:
         channel.queue_bind(
-            exchange='topic_logs', queue=queue_name, routing_key=binding_key)
+            exchange="topic_logs", queue=queue_name, routing_key=binding_key
+        )
 
-    print(' [*] Waiting for logs. To exit press CTRL+C')
-    channel.basic_consume(
-        queue=queue_name, on_message_callback=callback, auto_ack=True)
+    print(" [*] Waiting for logs. To exit press CTRL+C")
+    channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
 
     channel.start_consuming()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     os.makedirs(config.logging_dir, exist_ok=True)
     dictConfig(config.logging_config_dict)
     main()

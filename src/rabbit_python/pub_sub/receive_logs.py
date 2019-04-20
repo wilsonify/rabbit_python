@@ -17,24 +17,29 @@ def callback(ch, method, properties, body):
 def main():
     logging.info("main")
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=config.host, port=config.port))
+        pika.ConnectionParameters(host=config.host,
+                                  port=config.port)
+    )
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='logs', exchange_type='fanout')
+    channel.exchange_declare(exchange="logs",
+                             exchange_type="fanout")
 
-    result = channel.queue_declare('', exclusive=True)
+    result = channel.queue_declare("", exclusive=True)
     queue_name = result.method.queue
 
-    channel.queue_bind(exchange='logs', queue=queue_name)
+    channel.queue_bind(exchange="logs",
+                       queue=queue_name)
 
-    print(' [*] Waiting for logs. To exit press CTRL+C')
-    channel.basic_consume(
-        queue=queue_name, on_message_callback=callback, auto_ack=True)
+    print(" [*] Waiting for logs. To exit press CTRL+C")
+    channel.basic_consume(queue=queue_name,
+                          on_message_callback=callback,
+                          auto_ack=True)
 
     channel.start_consuming()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     os.makedirs(config.logging_dir, exist_ok=True)
     dictConfig(config.logging_config_dict)
     main()

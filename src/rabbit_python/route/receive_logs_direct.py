@@ -18,31 +18,37 @@ def callback(ch, method, properties, body):
 def main():
     logging.info("main")
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=config.host, port=config.port))
+        pika.ConnectionParameters(host=config.host, port=config.port)
+    )
     channel = connection.channel()
 
-    channel.exchange_declare(exchange='direct_logs', exchange_type='direct')
+    channel.exchange_declare(exchange="direct_logs",
+                             exchange_type="direct")
 
-    result = channel.queue_declare('', exclusive=True)
+    result = channel.queue_declare("", exclusive=True)
     queue_name = result.method.queue
 
-    severities = sys.argv[1:]
+    severities = sys.argv[1:] if len(sys.argv) > 1 else "info"
     if not severities:
         sys.stderr.write("Usage: %s [info] [warning] [error]\n" % sys.argv[0])
         sys.exit(1)
 
     for severity in severities:
-        channel.queue_bind(
-            exchange='direct_logs', queue=queue_name, routing_key=severity)
+        channel.queue_bind(exchange="direct_logs",
+                           queue=queue_name,
+                           routing_key=severity
+                           )
 
-    print(' [*] Waiting for logs. To exit press CTRL+C')
-    channel.basic_consume(
-        queue=queue_name, on_message_callback=callback, auto_ack=True)
+    print(" [*] Waiting for logs. To exit press CTRL+C")
+    channel.basic_consume(queue=queue_name,
+                          on_message_callback=callback,
+                          auto_ack=True
+                          )
 
     channel.start_consuming()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     os.makedirs(config.logging_dir, exist_ok=True)
     dictConfig(config.logging_config_dict)
     main()
