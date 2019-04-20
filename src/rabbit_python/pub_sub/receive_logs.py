@@ -5,19 +5,6 @@ from logging.config import dictConfig
 import pika
 from rabbit_python import config
 
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=config.host, port=config.port))
-channel = connection.channel()
-
-channel.exchange_declare(exchange='logs', exchange_type='fanout')
-
-result = channel.queue_declare('', exclusive=True)
-queue_name = result.method.queue
-
-channel.queue_bind(exchange='logs', queue=queue_name)
-
-print(' [*] Waiting for logs. To exit press CTRL+C')
-
 
 def callback(ch, method, properties, body):
     logging.info("callback")
@@ -27,15 +14,24 @@ def callback(ch, method, properties, body):
     print(" [x] %r" % body)
 
 
-channel.basic_consume(
-    queue=queue_name, on_message_callback=callback, auto_ack=True)
-
-channel.start_consuming()
-
-
 def main():
     logging.info("main")
-    pass
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=config.host, port=config.port))
+    channel = connection.channel()
+
+    channel.exchange_declare(exchange='logs', exchange_type='fanout')
+
+    result = channel.queue_declare('', exclusive=True)
+    queue_name = result.method.queue
+
+    channel.queue_bind(exchange='logs', queue=queue_name)
+
+    print(' [*] Waiting for logs. To exit press CTRL+C')
+    channel.basic_consume(
+        queue=queue_name, on_message_callback=callback, auto_ack=True)
+
+    channel.start_consuming()
 
 
 if __name__ == '__main__':

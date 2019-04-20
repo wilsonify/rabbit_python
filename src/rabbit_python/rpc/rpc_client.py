@@ -50,16 +50,13 @@ class FibonacciRpcClient(object):
         return int(self.response)
 
 
-fibonacci_rpc = FibonacciRpcClient()
-
-print(" [x] Requesting fib(30)")
-response = fibonacci_rpc.call(30)
-print(" [.] Got %r" % response)
-
-
 def main():
     logging.info("main")
-    pass
+    fibonacci_rpc = FibonacciRpcClient()
+
+    print(" [x] Requesting fib(30)")
+    response = fibonacci_rpc.call(30)
+    print(" [.] Got %r" % response)
 
 
 if __name__ == '__main__':

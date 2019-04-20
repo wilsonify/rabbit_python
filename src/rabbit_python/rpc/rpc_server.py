@@ -6,13 +6,6 @@ from logging.config import dictConfig
 import pika
 from rabbit_python import config
 
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=config.host, port=config.port))
-
-channel = connection.channel()
-
-channel.queue_declare(queue='rpc_queue')
-
 
 def fib(n):
     if n == 0:
@@ -36,16 +29,20 @@ def on_request(ch, method, props, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
-channel.basic_qos(prefetch_count=1)
-channel.basic_consume(queue='rpc_queue', on_message_callback=on_request)
-
-print(" [x] Awaiting RPC requests")
-channel.start_consuming()
-
-
 def main():
     logging.info("main")
-    pass
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(host=config.host, port=config.port))
+
+    channel = connection.channel()
+
+    channel.queue_declare(queue='rpc_queue')
+
+    channel.basic_qos(prefetch_count=1)
+    channel.basic_consume(queue='rpc_queue', on_message_callback=on_request)
+
+    print(" [x] Awaiting RPC requests")
+    channel.start_consuming()
 
 
 if __name__ == '__main__':
