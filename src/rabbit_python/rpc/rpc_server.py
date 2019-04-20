@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import pika
+from rabbit_python import config
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+    pika.ConnectionParameters(host=config.host, port=config.port))
 
 channel = connection.channel()
 
@@ -26,7 +27,7 @@ def on_request(ch, method, props, body):
 
     ch.basic_publish(exchange='',
                      routing_key=props.reply_to,
-                     properties=pika.BasicProperties(correlation_id = \
+                     properties=pika.BasicProperties(correlation_id= \
                                                          props.correlation_id),
                      body=str(response))
     ch.basic_ack(delivery_tag=method.delivery_tag)

@@ -2,8 +2,10 @@
 import pika
 import sys
 
+from rabbit_python import config
+
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+    pika.ConnectionParameters(host=config.host, port=config.port))
 channel = connection.channel()
 
 channel.queue_declare(queue='task_queue', durable=True)

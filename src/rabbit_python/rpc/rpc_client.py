@@ -2,12 +2,14 @@
 import pika
 import uuid
 
+from rabbit_python import config
+
 
 class FibonacciRpcClient(object):
 
     def __init__(self):
         self.connection = pika.BlockingConnection(
-            pika.ConnectionParameters(host='localhost'))
+            pika.ConnectionParameters(host=config.host, port=config.port))
 
         self.channel = self.connection.channel()
 

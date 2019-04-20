@@ -2,8 +2,10 @@
 import pika
 import sys
 
+from rabbit_python import config
+
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+    pika.ConnectionParameters(host=config.host, port=config.port))
 channel = connection.channel()
 
 channel.exchange_declare(exchange='direct_logs', exchange_type='direct')

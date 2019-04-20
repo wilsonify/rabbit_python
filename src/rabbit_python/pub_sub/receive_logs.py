@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import pika
+from rabbit_python import config
 
 connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='localhost'))
+    pika.ConnectionParameters(host=config.host, port=config.port))
 channel = connection.channel()
 
 channel.exchange_declare(exchange='logs', exchange_type='fanout')
