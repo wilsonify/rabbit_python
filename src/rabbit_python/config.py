@@ -1,8 +1,8 @@
 import os
 import logging
 
-host = "172.17.0.1"
-port = 32771
+host = "10.1.1.16"
+port = 5672
 
 logging_dir = "logs"
 

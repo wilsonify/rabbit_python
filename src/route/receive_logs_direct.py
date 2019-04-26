@@ -28,10 +28,7 @@ def main():
     result = channel.queue_declare("", exclusive=True)
     queue_name = result.method.queue
 
-    severities = sys.argv[1:] if len(sys.argv) > 1 else "info"
-    if not severities:
-        sys.stderr.write("Usage: %s [info] [warning] [error]\n" % sys.argv[0])
-        sys.exit(1)
+    severities = ["info", "error", "warning", "debug"]
 
     for severity in severities:
         channel.queue_bind(exchange="direct_logs",
@@ -39,7 +36,7 @@ def main():
                            routing_key=severity
                            )
 
-    print(" [*] Waiting for logs. To exit press CTRL+C")
+    print(" [*] Waiting for logs. with severity {} To exit press CTRL+C".format(severities))
     channel.basic_consume(queue=queue_name,
                           on_message_callback=callback,
                           auto_ack=True
