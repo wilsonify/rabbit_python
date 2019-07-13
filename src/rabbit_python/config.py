@@ -1,8 +1,11 @@
-import os
 import logging
+import os
 
 host = "10.152.183.148"
 port = 5672
+
+username_rabbit = "user"
+password_rabbit = "pzUxWgF6oN"
 
 logging_dir = "logs"
 
