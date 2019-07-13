@@ -19,10 +19,9 @@ def callback(ch, method, properties, body):
 def main():
     logging.info("main")
 
-
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
-            credentials=credentials_rabbit,
+            credentials=config.credentials_rabbit,
             host=config.host,
             port=config.port
         )
