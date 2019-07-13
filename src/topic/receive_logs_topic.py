@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-import os
 import logging
+import os
+import sys
 from logging.config import dictConfig
 
 import pika
-import sys
-
 from rabbit_python import config
 
 
@@ -19,8 +18,14 @@ def callback(ch, method, properties, body):
 
 def main():
     logging.info("main")
+    creds = pika.PlainCredentials(config.username_rabbit, config.password_rabbit)
+
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=config.host, port=config.port)
+        pika.ConnectionParameters(
+            credentials=creds
+    host = config.host,
+           port = config.port
+    )
     )
     channel = connection.channel()
 
