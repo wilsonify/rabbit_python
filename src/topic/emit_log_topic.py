@@ -1,16 +1,20 @@
 #!/usr/bin/env python
-import os
 import logging
+import os
 from logging.config import dictConfig
+
 import pika
-import sys
 from rabbit_python import config
 
 
 def main():
     logging.info("main")
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host=config.host, port=config.port)
+        pika.ConnectionParameters(
+            host=config.host,
+            port=config.port,
+            credentials=config.credentials_rabbit
+        )
     )
     channel = connection.channel()
 
