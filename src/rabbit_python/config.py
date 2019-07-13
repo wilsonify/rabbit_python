@@ -1,11 +1,15 @@
 import logging
 import os
 
+import pika
+
 host = "10.152.183.148"
 port = 5672
 
 username_rabbit = "user"
 password_rabbit = "pzUxWgF6oN"
+
+credentials_rabbit = pika.PlainCredentials(username_rabbit, password_rabbit)
 
 logging_dir = "logs"
 
