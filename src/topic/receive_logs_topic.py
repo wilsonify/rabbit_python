@@ -18,14 +18,14 @@ def callback(ch, method, properties, body):
 
 def main():
     logging.info("main")
-    creds = pika.PlainCredentials(config.username_rabbit, config.password_rabbit)
+    credentials_rabbit = pika.PlainCredentials(config.username_rabbit, config.password_rabbit)
 
     connection = pika.BlockingConnection(
         pika.ConnectionParameters(
-            credentials=creds
-    host = config.host,
-           port = config.port
-    )
+            credentials=credentials_rabbit,
+            host=config.host,
+            port=config.port
+        )
     )
     channel = connection.channel()
 
